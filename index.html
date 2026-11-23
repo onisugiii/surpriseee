@@ -40,10 +40,14 @@ const GROUPS=[
 function setup(){
   const d=devicePixelRatio||1;W=cv.clientWidth;H=cv.clientHeight;
   cv.width=W*d;cv.height=H*d;ctx.setTransform(d,0,0,d,0,0);
-  ch=clamp(H/58,9,15);cw=ch*0.6;cols=Math.ceil(W/cw);rows=Math.ceil(H/ch);
+  const land=W>H*1.1;SW=land?Math.min(W*0.8,H*1.05):Math.min(W*0.96,H*0.85);
+  const lh0=Math.min(H*0.062,SW*0.11);
+  ch=clamp(H/58,9,15);cw=ch*0.6;
+  if(W>=600){cw=Math.min(cw,Math.max(5.5,lh0/9));ch=cw/0.6}
+  cols=Math.ceil(W/cw);rows=Math.ceil(H/ch);
   ctx.font=ch+'px ui-monospace,Menlo,Consolas,monospace';ctx.textBaseline='top';
   const r=rng(11),m=Math.min(W,H*0.9);
-  base={x:W/2,y:H*0.78};SW=Math.min(W*0.96,H*0.85);
+  base={x:W/2,y:H*0.78};
   flowers='wpbwwpbwpwbwpwbw'.split('').map((k,i)=>({k,x:base.x+((i*7%16)/15-0.5)*SW*0.9,y:H*(0.1+r()*0.42),L:m*(0.1+r()*0.04),rot:r()*6.28,ph:r()*6,d:i*0.28,dash:3+Math.floor(r()*6),sp:(i%2?-1:1)*(0.25+r()*0.3)}));
   const rmax=Math.sqrt(SW*H*0.55*0.5/(flowers.length*Math.PI));
   flowers.forEach(f=>f.L=Math.min(f.L*0.95,rmax));
